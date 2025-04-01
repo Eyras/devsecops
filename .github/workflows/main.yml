@@ -1,0 +1,20 @@
+name: Security Pipeline
+on: push
+
+jobs:
+  security_scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@v1
+        with:
+          projectKey: devsecops-demo
+          token: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Scan dependencies with Snyk
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
